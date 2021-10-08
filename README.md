@@ -45,6 +45,11 @@ account AWS profile name.
 dev_profile_name <YOUR DEV PROFILE NAME> --prod_account_id <YOUR PRODUCTION
 ACCOUNT ID> --prod_profile_name <YOUR PRODUCTION PROFILE NAME>`
 
+## How to use
+
+[Lambda S3 trigger project](https://github.com/aws-samples/aws-cdk-examples/tree/master/python/lambda-s3-trigger) from AWS CDK Samples is used as infrastructure resources to demonstrate
+this solution. The content is placed inside the *src* directory and is deployed by the pipeline. Replace the content of this repository with your infrastructure code. Use [CDK Constructs](https://docs.aws.amazon.com/cdk/latest/guide/constructs.html) to combine your infrastructure code into one stack and reference this in the application stage inside *src/application_stage.py*. 
+
 ### Create a feature branch 
 
 On your machine’s local copy of the repository, create a new feature branch using the git commands
