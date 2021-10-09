@@ -22,8 +22,8 @@ stack of the application.
 
 ## Prerequisites 
 Before setting up this project, you should have the following prerequisites:
-* An AWS account
-* AWS CDK installed
+* An [AWS account](https://signin.aws.amazon.com/signin?redirect_uri=https%3A%2F%2Fportal.aws.amazon.com%2Fbilling%2Fsignup%2Fresume&client_id=signup)
+* [AWS CDK](https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_install) installed
 * Python3 installed
 
 ## Initial setup 
