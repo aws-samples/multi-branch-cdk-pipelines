@@ -31,18 +31,19 @@ Before setting up this project, you should have the following prerequisites:
 the pipeline and upload the source code from this repository. In the config.ini file, change the
 repository_name and region variables accordingly.
 
-Make sure to set up a fresh python environment. Install the dependencies:
+Install the dependencies:
 
-`pip install -r requirements.txt`
+    python3 -m venv .venv
+    source .venv/bin/activate
+    pip install -r requirements.txt
+    
 
 Run the initial-deploy.sh script to bootstrap the development and production environments and to
 deploy the default pipeline. You’ll be asked to provide the following parameters: (1) Development
 account ID, (2) Development account AWS profile name (3) Production account ID, (4) Production
 account AWS profile name.
 
-`sh ./initial-deploy.sh --dev_account_id <YOUR DEV ACCOUNT ID> --
-dev_profile_name <YOUR DEV PROFILE NAME> --prod_account_id <YOUR PRODUCTION
-ACCOUNT ID> --prod_profile_name <YOUR PRODUCTION PROFILE NAME>`
+    bash ./initial-deploy.sh --dev_account_id <YOUR DEV ACCOUNT ID> --dev_profile_name <YOUR DEV PROFILE NAME> --prod_account_id <YOUR PRODUCTION ACCOUNT ID> --prod_profile_name <YOUR PRODUCTION PROFILE NAME>
 
 ## How to use
 
@@ -61,7 +62,7 @@ git checkout -b user-feature-123
 git push origin user-feature-123
 ```
 
-The first AWS Lambda function will deploy the CodeBuild project which then deployes the feature
+The first AWS Lambda function will deploy the CodeBuild project which then deploys the feature
 pipeline. This can take a few minutes. You can log into the AWS Console and see the CodeBuild project
 running under AWS CodeBuild. After the build is successfully finished, you can see the deployed feature pipeline under AWS
 CodePipelines.

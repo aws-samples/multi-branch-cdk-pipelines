@@ -1,9 +1,5 @@
-#!/usr/bin/env bash
-
 #Including .ini file
 source config.ini
-echo ${region}
-echo ${repository_name}
 
 while [ $# -gt 0 ]; do
    if [[ $1 == *"--"* ]]; then

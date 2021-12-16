@@ -17,7 +17,7 @@ artifact_bucket_name = os.environ['ARTIFACT_BUCKET']
 codebuild_name_prefix = os.environ['CODEBUILD_NAME_PREFIX']
 
 
-def generate_build_spec(branch: str):
+def generate_build_spec(branch: str) -> str:
     """Generates the build spec file used for the CodeBuild project"""
     return f"""version: 0.2
 env:
