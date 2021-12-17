@@ -18,10 +18,6 @@ setuptools.setup(
     package_dir={"": "cicd"},
     packages=setuptools.find_packages(where="cicd"),
 
-    install_requires=[
-        "aws-cdk.core==1.111.0",
-    ],
-
     python_requires=">=3.6",
 
     classifiers=[
