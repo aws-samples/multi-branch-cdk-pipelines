@@ -1,0 +1,2 @@
+This product includes software from the Boto3 project (Apache License)
+https://github.com/boto/boto3
