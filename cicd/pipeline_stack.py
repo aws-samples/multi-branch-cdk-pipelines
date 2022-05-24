@@ -102,7 +102,7 @@ class PipelineStack(core.Stack):
             create_branch_func = aws_lambda.Function(
                 self,
                 'LambdaTriggerCreateBranch',
-                runtime=aws_lambda.Runtime.PYTHON_3_8,
+                runtime=aws_lambda.Runtime.PYTHON_3_9,
                 function_name='LambdaTriggerCreateBranch',
                 handler='create_branch.handler',
                 code=aws_lambda.Code.from_asset(path.join(this_dir, 'code')),
@@ -124,7 +124,7 @@ class PipelineStack(core.Stack):
             destroy_branch_func = aws_lambda.Function(
                 self,
                 'LambdaTriggerDestroyBranch',
-                runtime=aws_lambda.Runtime.PYTHON_3_8,
+                runtime=aws_lambda.Runtime.PYTHON_3_9,
                 function_name='LambdaTriggerDestroyBranch',
                 handler='destroy_branch.handler',
                 role=iam_stack.delete_branch_role,

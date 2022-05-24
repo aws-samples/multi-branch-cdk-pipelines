@@ -13,7 +13,7 @@ class S3TriggerConstruct(core.Construct):
 
         # create lambda function
         function = _lambda.Function(self, "lambda_function",
-                                    runtime=_lambda.Runtime.PYTHON_3_7,
+                                    runtime=_lambda.Runtime.PYTHON_3_9,
                                     handler="lambda-handler.main",
                                     code=_lambda.Code.asset("./src/lambda"))
         # create s3 bucket
