@@ -17,7 +17,10 @@ class S3TriggerConstruct(core.Construct):
                                     handler="lambda-handler.main",
                                     code=_lambda.Code.asset("./src/lambda"))
         # create s3 bucket
-        s3 = _s3.Bucket(self, "s3bucket")
+        s3 = _s3.Bucket(self,
+                        "s3bucket",
+                        block_public_access=_s3.BlockPublicAccess.BLOCK_ALL,
+                        encryption=_s3.BucketEncryption.KMS)
 
         # create s3 notification for lambda function
         notification = aws_s3_notifications.LambdaDestination(function)
