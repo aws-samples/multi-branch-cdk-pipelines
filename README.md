@@ -1,8 +1,6 @@
-
 # Using AWS CDK Pipelines and AWS Lambda for multi-branch pipeline management and infrastructure deployment. 
 
-This project shows how to use the AWS CDK Pipelines module to follow a Gitflow development model
-using AWS CDK. Software development teams often follow a strict branching strategy during the
+ This project shows how to use the [AWS CDK Pipelines module](https://docs.aws.amazon.com/cdk/api/latest/docs/pipelines-readme.html) to follow a Gitflow development model Software development teams often follow a strict branching strategy during the
 development lifecycle of a solution. It is common for newly created branches to need their own isolated
 copy of infrastructure resources in order to develop new features.
 
