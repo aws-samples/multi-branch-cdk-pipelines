@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #Including .ini file
-source config.ini
+. ./config.ini
 echo ${region}
 echo ${repository_name}
 
@@ -38,7 +38,7 @@ npx cdk bootstrap --profile $dev_profile_name --cloudformation-execution-policie
 npx cdk bootstrap --profile $prod_profile_name --trust $dev_account_id --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess aws://$prod_account_id/${region}
 
 # deploy pipeline
-npx cdk deploy cdk-pipelines-multi-branch-$BRANCH
+npx cdk synth cdk-pipelines-multi-branch-$BRANCH
 
 exit $?
 

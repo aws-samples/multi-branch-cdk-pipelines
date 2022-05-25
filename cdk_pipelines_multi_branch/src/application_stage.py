@@ -1,4 +1,6 @@
-from aws_cdk.core import Construct, Stage, Stack
+from aws_cdk import Stage, Stack
+from constructs import Construct
+
 from .s3trigger.s3trigger_stack import S3TriggerConstruct
 
 

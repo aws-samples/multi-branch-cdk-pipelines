@@ -1,5 +1,5 @@
 from aws_cdk.aws_iam import Role, PolicyStatement, ManagedPolicy, ServicePrincipal
-from aws_cdk.core import Construct
+from constructs import Construct
 
 
 class IAMPipelineStack(Construct):
@@ -26,7 +26,7 @@ class IAMPipelineStack(Construct):
                 'codebuild:CreateProject',
                 'codebuild:StartBuild'
             ],
-            resources=[f'arn:aws:codebuild:{region}:{account}:project/*']
+            resources=[f'arn:aws:codebuild:{region}:{account}:project/{codebuild_prefix}*']
         ))
 
         # IAM Role for the AWS Lambda function which deletes the branch resources
@@ -42,7 +42,7 @@ class IAMPipelineStack(Construct):
                 'codebuild:DeleteProject',
                 'codebuild:CreateProject'
             ],
-            resources=[f'arn:aws:codebuild:{region}:{account}:project/*']
+            resources=[f'arn:aws:codebuild:{region}:{account}:project/{codebuild_prefix}*']
         ))
 
         # IAM Role for the feature branch AWS CodeBuild project.
@@ -80,15 +80,6 @@ class IAMPipelineStack(Construct):
                     ]
                 }
             }
-        ))
-
-        create_branch_role.add_to_policy(PolicyStatement(
-            actions=['iam:PassRole'],
-            resources=[code_build_role.role_arn]
-        ))
-        delete_branch_role.add_to_policy(PolicyStatement(
-            actions=['iam:PassRole'],
-            resources=[code_build_role.role_arn]
         ))
 
         self.create_branch_role = create_branch_role

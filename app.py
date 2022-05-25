@@ -2,10 +2,11 @@
 import configparser
 import os
 
+import aws_cdk as cdk
 import boto3
-from aws_cdk import core as cdk
+import cdk_nag
 
-from cicd.pipeline_stack import PipelineStack
+from cdk_pipelines_multi_branch.cicd.cdk_pipelines_multi_branch_stack import CdkPipelinesMultiBranchStack
 
 app = cdk.App()
 
@@ -37,11 +38,13 @@ config = {
 if current_branch == default_branch:
     config['prod_account_id'] = os.environ['PROD_ACCOUNT_ID']
 
-PipelineStack(
+CdkPipelinesMultiBranchStack(
     app,
     f"cdk-pipelines-multi-branch-{current_branch}",
     config,
     env=cdk.Environment(account=config['dev_account_id'], region=region)
 )
+
+cdk.Aspects.of(app).add(cdk_nag.AwsSolutionsChecks())
 
 app.synth()

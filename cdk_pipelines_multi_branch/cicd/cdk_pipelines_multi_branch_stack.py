@@ -1,20 +1,26 @@
 from os import path
 
-from aws_cdk import core, aws_events_targets, aws_lambda, aws_codepipeline_actions
+from aws_cdk import (
+    Stack, aws_codepipeline_actions, Aspects, RemovalPolicy
+)
 from aws_cdk.aws_codecommit import Repository
+from aws_cdk.aws_events_targets import LambdaFunction
 from aws_cdk.aws_iam import PolicyStatement
-from aws_cdk.aws_s3 import Bucket, BucketEncryption
-from aws_cdk.core import RemovalPolicy
-from aws_cdk.pipelines import CodePipeline, ManualApprovalStep, CodePipelineSource, CodeBuildStep
+from aws_cdk.aws_lambda import Function, Runtime, Code
+from aws_cdk.aws_s3 import BucketEncryption
+from aws_cdk.pipelines import CodePipeline, CodeBuildStep, CodePipelineSource, ManualApprovalStep
+from cdk_nag import NagSuppressions, NagPackSuppression
+from constructs import Construct
 
-from src.application_stage import MainStage as Application
-from .iam.iam_stack import IAMPipelineStack
+from cdk_pipelines_multi_branch.cicd.aspects.key_rotation_aspect import KeyRotationAspect
+from .constructs.standard_bucket import S3Construct
+from .iam_stack import IAMPipelineStack
+from ..src.application_stage import MainStage as Application
 
 
-class PipelineStack(core.Stack):
+class CdkPipelinesMultiBranchStack(Stack):
 
-    def __init__(self, scope: core.Construct, construct_id: str, config: object,
-                 **kwargs) -> None:
+    def __init__(self, scope: Construct, construct_id: str, config: object, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
         this_dir = path.dirname(__file__)
@@ -70,6 +76,8 @@ class PipelineStack(core.Stack):
                 ]
             ))
 
+        Aspects.of(self).add(KeyRotationAspect())
+
         dev_stage_name = 'DEV'
         dev_stage = Application(self, dev_stage_name, branch, env={'account': dev_account_id, 'region': region})
         pipeline.add_stage(dev_stage)
@@ -80,13 +88,12 @@ class PipelineStack(core.Stack):
                                pre=[ManualApprovalStep('ManualApproval', comment='Pre-prod manual approval')])
 
             # Artifact bucket for feature AWS CodeBuild projects
-            artifact_bucket = Bucket(
-                self,
-                'BranchArtifacts',
+            args = dict(
                 encryption=BucketEncryption.KMS_MANAGED,
                 removal_policy=RemovalPolicy.DESTROY,
                 auto_delete_objects=True
             )
+            artifact_bucket = S3Construct(self, 'BranchArtifacts', args).bucket
 
             # AWS Lambda and AWS CodeBuild projects' IAM Roles.
             iam_stack = IAMPipelineStack(
@@ -99,13 +106,13 @@ class PipelineStack(core.Stack):
                 codebuild_prefix=codebuild_prefix)
 
             # AWS Lambda function triggered upon branch creation
-            create_branch_func = aws_lambda.Function(
+            create_branch_func = Function(
                 self,
                 'LambdaTriggerCreateBranch',
-                runtime=aws_lambda.Runtime.PYTHON_3_8,
+                runtime=Runtime.PYTHON_3_9,
                 function_name='LambdaTriggerCreateBranch',
                 handler='create_branch.handler',
-                code=aws_lambda.Code.from_asset(path.join(this_dir, 'code')),
+                code=Code.from_asset(path.join(this_dir, 'code')),
                 environment={
                     "ACCOUNT_ID": dev_account_id,
                     "CODE_BUILD_ROLE_ARN": iam_stack.code_build_role.role_arn,
@@ -118,13 +125,13 @@ class PipelineStack(core.Stack):
             repo.on_reference_created(
                 'BranchCreateTrigger',
                 description="AWS CodeCommit reference created event.",
-                target=aws_events_targets.LambdaFunction(create_branch_func))
+                target=LambdaFunction(create_branch_func))
 
             # AWS Lambda function triggered upon branch deletion
-            destroy_branch_func = aws_lambda.Function(
+            destroy_branch_func = Function(
                 self,
                 'LambdaTriggerDestroyBranch',
-                runtime=aws_lambda.Runtime.PYTHON_3_8,
+                runtime=Runtime.PYTHON_3_9,
                 function_name='LambdaTriggerDestroyBranch',
                 handler='destroy_branch.handler',
                 role=iam_stack.delete_branch_role,
@@ -135,11 +142,40 @@ class PipelineStack(core.Stack):
                     "CODEBUILD_NAME_PREFIX": codebuild_prefix,
                     "DEV_STAGE_NAME": f'{dev_stage_name}-{dev_stage.main_stack_name}'
                 },
-                code=aws_lambda.Code.from_asset(path.join(this_dir,
-                                                          'code')))
+                code=Code.from_asset(path.join(this_dir,
+                                               'code')))
 
             # Configure AWS CodeCommit to trigger the Lambda function when a branch is deleted
             repo.on_reference_deleted(
                 'BranchDeleteTrigger',
                 description="AWS CodeCommit reference deleted event.",
-                target=aws_events_targets.LambdaFunction(destroy_branch_func))
+                target=LambdaFunction(destroy_branch_func))
+
+        # CDK Nag supressions
+        NagSuppressions.add_stack_suppressions(self, [
+            NagPackSuppression(
+                id='AwsSolutions-IAM5',
+                reason='Wildcard permissions for CDK Pipelines resources are allowed.'
+            )
+        ], True)
+
+        NagSuppressions.add_stack_suppressions(self, [
+            NagPackSuppression(
+                id='AwsSolutions-KMS5',
+                reason='Fault positive: KMS Key rotation enabled using Aspects.'
+            )
+        ], True)
+
+        NagSuppressions.add_stack_suppressions(self, [
+            NagPackSuppression(
+                id='AwsSolutions-S1',
+                reason='Server Access Logging not required.'
+            )
+        ], True)
+
+        NagSuppressions.add_stack_suppressions(self, [
+            NagPackSuppression(
+                id='AwsSolutions-IAM4',
+                reason='Lambda can use AWS Lambda managed policy'
+            )
+        ], True)
