@@ -6,7 +6,7 @@ using AWS CDK. Software development teams often follow a strict branching strate
 development lifecycle of a solution. It is common for newly created branches to need their own isolated
 copy of infrastructure resources in order to develop new features.
 
-CDK Pipelines is a construct library module for painless continuous delivery of AWS CDK applications.
+[CDK Pipelines](https://docs.aws.amazon.com/cdk/api/latest/docs/pipelines-readme.html) is a construct library module for painless continuous delivery of AWS CDK applications.
 CDK Pipelines are self-updating: if you add application stages or stacks, the pipeline automatically
 reconfigures itself to deploy those new stages and/or stacks.
 
@@ -23,8 +23,8 @@ stack of the application.
 
 ## Prerequisites 
 Before setting up this project, you should have the following prerequisites:
-* An AWS account
-* AWS CDK installed
+* An [AWS account](https://signin.aws.amazon.com/signin?redirect_uri=https%3A%2F%2Fportal.aws.amazon.com%2Fbilling%2Fsignup%2Fresume&client_id=signup)
+* [AWS CDK](https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_install) installed
 * Python3 installed
 
 ## Initial setup 
