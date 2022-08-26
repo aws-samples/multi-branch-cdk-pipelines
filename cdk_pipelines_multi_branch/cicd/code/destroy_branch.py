@@ -54,7 +54,7 @@ def handler(event, context):
                 },
                 environment={
                     'type': 'LINUX_CONTAINER',
-                    'image': 'aws/codebuild/standard:4.0',
+                    'image': 'aws/codebuild/standard:6.0',
                     'computeType': 'BUILD_GENERAL1_SMALL'
                 },
                 serviceRole=role_arn
