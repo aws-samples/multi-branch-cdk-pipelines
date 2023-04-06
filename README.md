@@ -34,12 +34,12 @@ Make sure to set up a fresh python environment. Install the dependencies:
 
 `pip install -r requirements.txt`
 
-Run the cdk_deploy.sh script to bootstrap the development and production environments and to
+Run the initial-deploy.sh script to bootstrap the development and production environments and to
 deploy the default pipeline. You’ll be asked to provide the following parameters: (1) Development
 account ID, (2) Development account AWS profile name (3) Production account ID, (4) Production
 account AWS profile name.
 
-`sh ./cdk_deploy.sh --dev_account_id <YOUR DEV ACCOUNT ID> --
+`sh ./initial-deploy.sh --dev_account_id <YOUR DEV ACCOUNT ID> --
 dev_profile_name <YOUR DEV PROFILE NAME> --prod_account_id <YOUR PRODUCTION
 ACCOUNT ID> --prod_profile_name <YOUR PRODUCTION PROFILE NAME>`
 
