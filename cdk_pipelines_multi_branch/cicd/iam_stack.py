@@ -81,6 +81,8 @@ class IAMPipelineStack(Construct):
                 }
             }
         ))
+        code_build_role.grant_pass_role(create_branch_role)
+        code_build_role.grant_pass_role(delete_branch_role)
 
         self.create_branch_role = create_branch_role
         self.delete_branch_role = delete_branch_role
