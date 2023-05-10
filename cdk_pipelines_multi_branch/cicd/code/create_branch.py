@@ -75,7 +75,7 @@ def handler(event, context):
             )
 
             client.start_build(
-                projectName=f'CodeBuild-{branch}-create'
+                projectName=f'{codebuild_name_prefix}-{branch}-create'
             )
     except Exception as e:
         logger.error(e)
