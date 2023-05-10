@@ -61,15 +61,15 @@ def handler(event, context):
             )
 
             client.start_build(
-                projectName=f'CodeBuild-{branch}-destroy'
+                projectName=f'{codebuild_name_prefix}-{branch}-destroy'
             )
 
             client.delete_project(
-                name=f'CodeBuild-{branch}-destroy'
+                name=f'{codebuild_name_prefix}-{branch}-destroy'
             )
 
             client.delete_project(
-                name=f'CodeBuild-{branch}-create'
+                name=f'{codebuild_name_prefix}-{branch}-create'
             )
     except Exception as e:
         logger.error(e)
